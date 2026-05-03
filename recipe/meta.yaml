@@ -1,0 +1,51 @@
+{% set name = "logfire-api" %}
+{% set version = "4.32.1" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  - url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/logfire_api-{{ version }}.tar.gz
+    sha256: 5e8714b2bb5fb5d1f4a4a833941e4ca711b75d2c1f98e76c5ad680fe6991af6a
+  # LICENSE not included in sdist; pulled from upstream tag.
+  - url: https://raw.githubusercontent.com/pydantic/logfire/v{{ version }}/LICENSE
+    sha256: 035507b8a1e787a16c7f138f092557a30a8ee9cc9cef6e84d11546ee3b9a45cd
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  skip: true  # [py<38]
+
+requirements:
+  host:
+    - python
+    - pip
+    - hatchling
+  run:
+    - python
+
+test:
+  imports:
+    - logfire_api
+  requires:
+    - pip
+  commands:
+    - pip check
+
+about:
+  home: https://github.com/pydantic/logfire
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Shim for the Logfire SDK which does nothing unless Logfire is installed
+  description: |
+    logfire-api is a shim for the Logfire SDK. It provides no-op
+    implementations of the Logfire API so that libraries can integrate with
+    Logfire as an optional dependency without requiring it at runtime.
+  doc_url: https://logfire.pydantic.dev/docs/
+  dev_url: https://github.com/pydantic/logfire
+
+extra:
+  recipe-maintainers:
+    - xkong-anaconda
